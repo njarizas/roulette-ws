@@ -3,6 +3,7 @@ package com.nj4s.roulette.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ import com.nj4s.roulette.util.Constants;
 
 @Service
 public class FacadeService {
+
+	private static final Logger log = Logger.getLogger(FacadeService.class);
 
 	@Autowired
 	RouletteService rouletteService;
@@ -56,32 +59,26 @@ public class FacadeService {
 			turn.setTurnResult(rouletteService.getRouletteResult());
 			turnService.save(turn);
 			bets = betService.findBetsForTurn(turn);
-			System.out.print("Result: " + turn.getTurnResult());
-			System.out.println(turn.getTurnResult()%2==0?" Red":" Black");
-			// pay profit
-			payProfit(bets, turn);
+			log.info("Result: " + turn.getTurnResult() + (turn.getTurnResult() % 2 == 0 ? " Red" : " Black"));
+			for (Bet bet : bets) {
+				payProfit(bet, turn);
+			}
 			openBets(roulette);// start a new twist
 		}
 		return bets;
 	}
 
-	private void payProfit(List<Bet> bets, Turn turn) {
-		for (Bet bet : bets) {
-			if (bet.getBetOption().getOptionValue().equals(turn.getTurnResult())) {
-				bet.setGain(bet.getBetAmount() * Constants.GAIN_FACTOR_TO_NUMBER);
-				System.out.println("full");
-			} else if (bet.getBetOption().equals(BetOptionEnum.BLACK) && turn.getTurnResult() % 2 == 1) {
-				bet.setGain(bet.getBetAmount() * Constants.GAIN_FACTOR_TO_COLOR);
-				System.out.println("Black");
-			} else if (bet.getBetOption().equals(BetOptionEnum.RED)
-					&& turn.getTurnResult() % 2 == 0) {
-				bet.setGain(bet.getBetAmount() * Constants.GAIN_FACTOR_TO_COLOR);
-				System.out.println("Red");
-			} else {
-				bet.setGain(0d);
-			}
-			betService.save(bet);
+	private void payProfit(Bet bet, Turn turn) {
+		if (bet.getBetOption().getOptionValue().equals(turn.getTurnResult())) {
+			bet.setGain(bet.getBetAmount() * Constants.GAIN_FACTOR_TO_NUMBER);
+		} else if (bet.getBetOption().equals(BetOptionEnum.BLACK) && turn.getTurnResult() % 2 == 1) {
+			bet.setGain(bet.getBetAmount() * Constants.GAIN_FACTOR_TO_COLOR);
+		} else if (bet.getBetOption().equals(BetOptionEnum.RED) && turn.getTurnResult() % 2 == 0) {
+			bet.setGain(bet.getBetAmount() * Constants.GAIN_FACTOR_TO_COLOR);
+		} else {
+			bet.setGain(0d);
 		}
+		betService.save(bet);
 	}
 
 	public void openBets(Roulette roulette) {
@@ -97,6 +94,26 @@ public class FacadeService {
 
 	public Roulette findRouletteById(Integer rouletteId) {
 		return rouletteService.findById(rouletteId);
+	}
+
+	public List<Bet> findAllBets() {
+		return betService.findAll();
+	}
+
+	public Bet createBet(Bet bet) {
+		Roulette roulette = rouletteService.findById(bet.getRouletteId());
+		if (roulette == null) {
+			return null;
+		}
+		if (!rouletteService.rouletteIsOpen(roulette)) {
+			// throw new Exception("Roulette is closed");
+			log.warn("Roulette is closed");
+			return null;
+		}
+		Turn activeTurn = turnService.findActiveTurn(bet.getRouletteId());
+		bet.setTurnId(activeTurn.getTurnId());
+		return betService.createBet(bet);
+
 	}
 
 }

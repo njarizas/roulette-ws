@@ -4,16 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nj4s.roulette.dao.BetRepository;
-import com.nj4s.roulette.dao.RouletteRepository;
-import com.nj4s.roulette.dao.TurnRepository;
 import com.nj4s.roulette.dto.Bet;
 import com.nj4s.roulette.dto.BetOptionEnum;
-import com.nj4s.roulette.dto.Roulette;
-import com.nj4s.roulette.dto.RouletteStateEnum;
 import com.nj4s.roulette.dto.Turn;
 
 @Service
@@ -21,12 +18,8 @@ public class BetService {
 
 	@Autowired
 	BetRepository betRepository;
-	@Autowired
-	RouletteRepository rouletteRepository;
-	@Autowired
-	TurnRepository turnRepository;
-	@Autowired
-	TurnService turnService;
+	
+	private static final Logger log = Logger.getLogger(FacadeService.class);
 
 	public List<Bet> findAll() {
 		return betRepository.findAll();
@@ -35,25 +28,14 @@ public class BetService {
 	public Bet createBet(Bet bet) {
 		if (!isValidStakeAmount(bet)) {
 //			 throw new Exception("Bet Amount is not valid");
-			System.out.println("Bet Amount is not valid");
+			log.warn("Bet Amount is not valid: " + bet);
 			return null;
 		}
 		if (!isValidStakeOption(bet)) {
 //			 throw new Exception("Bet Option is not valid");
-			System.out.println("Bet Option is not valid");
+			log.warn("Bet Option is not valid: " + bet);
 			return null;
 		}
-		Roulette roulette = rouletteRepository.findById(bet.getRouletteId()).orElse(null);
-		if (roulette == null) {
-			return null;
-		}
-		if (!rouletteIsOpen(roulette)) {
-			// throw new Exception("Roulette is closed");
-			System.out.println("Roulette is closed");
-			return null;
-		}
-		Turn activeTurn = turnService.findActiveTurn(roulette.getRouletteId());
-		bet.setTurnId(activeTurn.getTurnId());
 		return betRepository.saveAndFlush(bet);
 	}
 	
@@ -67,10 +49,6 @@ public class BetService {
 
 	private boolean isValidStakeOption(Bet bet) {
 		return Arrays.asList(BetOptionEnum.values()).contains(bet.getBetOption());
-	}
-
-	private boolean rouletteIsOpen(Roulette roulette) {
-		return roulette.getState().equals(RouletteStateEnum.OPEN);
 	}
 
 	public List<Bet> findBetsForTurn(Turn turn) {

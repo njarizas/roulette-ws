@@ -12,25 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nj4s.roulette.dto.Roulette;
 import com.nj4s.roulette.service.FacadeService;
-import com.nj4s.roulette.service.RouletteService;
-import com.nj4s.roulette.service.TurnService;
 import com.sun.istack.NotNull;
 
 @RestController
 public class RouletteAPI {
-	
+
 	@Autowired
 	FacadeService facadeService;
 
-	@Autowired
-	RouletteService rouletteService;
-	
-	@Autowired
-	TurnService turnService;
-
 	@GetMapping(value = "/roulette")
 	public List<Roulette> findAll() {
-		return rouletteService.findAll();
+		return facadeService.findAllRoulettes();
 	}
 
 	@PostMapping(value = "/roulette")
@@ -40,15 +32,15 @@ public class RouletteAPI {
 
 	@GetMapping(value = "/roulette/{rouletteId}")
 	public Roulette findById(@PathVariable @NotNull Integer rouletteId) {
-		return rouletteService.findById(rouletteId);
+		return facadeService.findRouletteById(rouletteId);
 	}
 
-	//TODO Investigate the correct way to use PATCH according to RFC6902 
+	// TODO Investigate the correct way to use PATCH according to RFC6902
 	@PatchMapping(value = "/roulette/open")
 	public String open(@RequestBody Integer rouletteId) {
 		return facadeService.openRoulette(rouletteId);
 	}
-	
+
 	@PatchMapping(value = "/roulette/close")
 	public String close(@RequestBody Integer rouletteId) {
 		return facadeService.closeRoulette(rouletteId);

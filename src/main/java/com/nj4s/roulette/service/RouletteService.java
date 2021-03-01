@@ -61,5 +61,9 @@ public class RouletteService {
 	public Integer getRouletteResult() {
 		return r.nextInt(37);
 	}
+	
+	public boolean rouletteIsOpen(Roulette roulette) {
+		return roulette.getState().equals(RouletteStateEnum.OPEN);
+	}
 
 }

@@ -24,5 +24,5 @@ public class TurnService {
 		return turnList.stream().filter(x -> x.getRouletteId().equals(rouletteId) && x.getIsSpinning()).findAny()
 				.orElse(null);
 	}
-
+	
 }
