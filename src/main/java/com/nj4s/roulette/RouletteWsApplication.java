@@ -18,7 +18,7 @@ public class RouletteWsApplication {
 
 	  @Bean
 	  RedisTemplate<String, Roulette> redisTemplate(){
-	    RedisTemplate<String,Roulette> redisTemplate = new RedisTemplate<String, Roulette>();
+	    RedisTemplate<String,Roulette> redisTemplate = new RedisTemplate<>();
 	    redisTemplate.setConnectionFactory(jedisConnectionFactory());
 	    return redisTemplate;
 	  }

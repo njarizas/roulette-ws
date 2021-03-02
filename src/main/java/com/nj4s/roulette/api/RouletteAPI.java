@@ -1,5 +1,6 @@
 package com.nj4s.roulette.api;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,8 @@ import com.nj4s.roulette.service.FacadeService;
 
 @RestController
 public class RouletteAPI {
+	
+	private static final Logger log = Logger.getLogger(RouletteAPI.class);
 
 	@Autowired
 	FacadeService facadeService;
@@ -26,6 +29,7 @@ public class RouletteAPI {
 
 	@PostMapping(value = "/roulette")
 	public Roulette create(@RequestBody Roulette roulette) {
+		log.info("creating a new roulette: " + roulette);
 		return facadeService.createRoulette(roulette);
 	}
 
@@ -38,11 +42,13 @@ public class RouletteAPI {
 	@PatchMapping(value = "/roulette/open", produces = { "application/json" })
 	@ResponseStatus(HttpStatus.OK)
 	public String open(@RequestBody Long rouletteId) {
+		log.info("opening roulette");
 		return facadeService.openRoulette(rouletteId);
 	}
 
 	@PatchMapping(value = "/roulette/close")
 	public String close(@RequestBody Long rouletteId) {
+		log.info("closing roulette");
 		return facadeService.closeRoulette(rouletteId);
 	}
 

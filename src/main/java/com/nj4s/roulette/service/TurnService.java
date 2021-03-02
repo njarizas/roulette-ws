@@ -20,7 +20,7 @@ public class TurnService {
 	}
 
 	public Turn findActiveTurn(Long rouletteId) {
-		// FIXME: filtrar desde la base de datos
+		// FIXME filter from database 
 		Iterable<Turn> turnList = turnRepository.findAll();
 		List<Turn> turnLista = new ArrayList<>();
 		for(Turn turn : turnList) {
