@@ -16,7 +16,7 @@ import com.nj4s.roulette.service.FacadeService;
 
 @RestController
 public class RouletteAPI {
-	
+
 	private static final Logger log = Logger.getLogger(RouletteAPI.class);
 
 	@Autowired
@@ -46,7 +46,7 @@ public class RouletteAPI {
 		return facadeService.openRoulette(rouletteId);
 	}
 
-	@PatchMapping(value = "/roulette/close")
+	@PatchMapping(value = "/roulette/close", produces = { "application/json" })
 	public String close(@RequestBody Long rouletteId) {
 		log.info("closing roulette");
 		return facadeService.closeRoulette(rouletteId);
