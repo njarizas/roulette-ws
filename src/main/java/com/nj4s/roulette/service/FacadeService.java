@@ -12,6 +12,7 @@ import com.nj4s.roulette.dto.BetOptionEnum;
 import com.nj4s.roulette.dto.Roulette;
 import com.nj4s.roulette.dto.RouletteStateEnum;
 import com.nj4s.roulette.dto.Turn;
+import com.nj4s.roulette.exceptions.BadRequestException;
 import com.nj4s.roulette.util.Constants;
 
 @Service
@@ -100,15 +101,15 @@ public class FacadeService {
 		return betService.findAll();
 	}
 
-	public Bet createBet(Bet bet) {
+	public Bet createBet(Bet bet) throws BadRequestException {
 		Roulette roulette = rouletteService.findById(bet.getRouletteId());
 		if (roulette == null) {
-			return null;
+			log.warn("Roulette does not exist");
+			throw new BadRequestException("Roulette does not exist");
 		}
 		if (!rouletteService.rouletteIsOpen(roulette)) {
-			// throw new Exception("Roulette is closed");
-			log.warn("Roulette is closed");
-			return null;
+			log.warn("Roulette is closed: " + roulette);
+			 throw new BadRequestException("Roulette is closed");
 		}
 		Turn activeTurn = turnService.findActiveTurn(bet.getRouletteId());
 		bet.setTurnId(activeTurn.getTurnId());

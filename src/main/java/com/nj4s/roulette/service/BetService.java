@@ -12,6 +12,7 @@ import com.nj4s.roulette.dao.BetRepository;
 import com.nj4s.roulette.dto.Bet;
 import com.nj4s.roulette.dto.BetOptionEnum;
 import com.nj4s.roulette.dto.Turn;
+import com.nj4s.roulette.exceptions.BadRequestException;
 
 @Service
 public class BetService {
@@ -19,22 +20,21 @@ public class BetService {
 	@Autowired
 	BetRepository betRepository;
 	
-	private static final Logger log = Logger.getLogger(FacadeService.class);
+	private static final Logger log = Logger.getLogger(BetService.class);
 
 	public List<Bet> findAll() {
 		return betRepository.findAll();
 	}
 
-	public Bet createBet(Bet bet) {
+	public Bet createBet(Bet bet) throws BadRequestException {
 		if (!isValidStakeAmount(bet)) {
-//			 throw new Exception("Bet Amount is not valid");
 			log.warn("Bet Amount is not valid: " + bet);
-			return null;
+			throw new BadRequestException("Bet Amount is not valid");
 		}
 		if (!isValidStakeOption(bet)) {
-//			 throw new Exception("Bet Option is not valid");
 			log.warn("Bet Option is not valid: " + bet);
-			return null;
+			 throw new BadRequestException("Bet Option is not valid");
+			
 		}
 		return betRepository.saveAndFlush(bet);
 	}
@@ -44,7 +44,7 @@ public class BetService {
 	}
 
 	private boolean isValidStakeAmount(Bet bet) {
-		return bet.getBetAmount() < 10_000 && bet.getBetAmount() >= 0.01;
+		return bet.getBetAmount() < 10_000 && bet.getBetAmount() >= 1;
 	}
 
 	private boolean isValidStakeOption(Bet bet) {

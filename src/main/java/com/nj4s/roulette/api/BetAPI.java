@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nj4s.roulette.dto.Bet;
 import com.nj4s.roulette.dto.Roulette;
+import com.nj4s.roulette.exceptions.BadRequestException;
 import com.nj4s.roulette.service.FacadeService;
 
 @RestController
@@ -25,7 +26,7 @@ public class BetAPI {
 	}
 
 	@PostMapping(value = "/bet")
-	public Bet placeBet(@RequestBody Bet bet) {
+	public Bet placeBet(@RequestBody Bet bet) throws BadRequestException {
 		return facadeService.createBet(bet);
 	}
 
