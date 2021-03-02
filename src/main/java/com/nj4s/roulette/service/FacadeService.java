@@ -38,14 +38,14 @@ public class FacadeService {
 
 	}
 
-	public String openRoulette(Integer rouletteId) {
+	public String openRoulette(Long rouletteId) {
 		Roulette roulette = findRouletteById(rouletteId);
 		String retorno = rouletteService.openRoulette(roulette);
 		openBets(roulette);
 		return retorno;
 	}
 
-	public String closeRoulette(Integer rouletteId) {
+	public String closeRoulette(Long rouletteId) {
 		Roulette roulette = findRouletteById(rouletteId);
 		closeBets(roulette);
 		return rouletteService.closeRoulette(roulette);
@@ -89,15 +89,15 @@ public class FacadeService {
 		turnService.save(turn);
 	}
 
-	public List<Roulette> findAllRoulettes() {
+	public Iterable<Roulette> findAllRoulettes() {
 		return rouletteService.findAll();
 	}
 
-	public Roulette findRouletteById(Integer rouletteId) {
+	public Roulette findRouletteById(Long rouletteId) {
 		return rouletteService.findById(rouletteId);
 	}
 
-	public List<Bet> findAllBets() {
+	public Iterable<Bet> findAllBets() {
 		return betService.findAll();
 	}
 

@@ -2,21 +2,18 @@ package com.nj4s.roulette.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity(name = "bets")
+@RedisHash("Bet")
 public class Bet implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer betId;
-	Integer rouletteId;
-	Integer turnId;
+	Long betId;
+	Long rouletteId;
+	Long turnId;
 	BetOptionEnum betOption;
 	Double betAmount;
 	Double gain;
@@ -25,34 +22,34 @@ public class Bet implements Serializable {
 		super();
 	}
 
-	public Bet(Integer rouletteId, BetOptionEnum betOption, Double betAmount) {
+	public Bet(Long rouletteId, BetOptionEnum betOption, Double betAmount) {
 		super();
 		this.rouletteId = rouletteId;
 		this.betOption = betOption;
 		this.betAmount = betAmount;
 	}
 
-	public Integer getBetId() {
+	public Long getBetId() {
 		return betId;
 	}
 
-	public void setBetId(Integer betId) {
+	public void setBetId(Long betId) {
 		this.betId = betId;
 	}
 
-	public Integer getRouletteId() {
+	public Long getRouletteId() {
 		return rouletteId;
 	}
 
-	public void setRouletteId(Integer rouletteId) {
+	public void setRouletteId(Long rouletteId) {
 		this.rouletteId = rouletteId;
 	}
 
-	public Integer getTurnId() {
+	public Long getTurnId() {
 		return turnId;
 	}
 
-	public void setTurnId(Integer turnId) {
+	public void setTurnId(Long turnId) {
 		this.turnId = turnId;
 	}
 

@@ -1,5 +1,6 @@
 package com.nj4s.roulette.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class BetService {
 	
 	private static final Logger log = Logger.getLogger(BetService.class);
 
-	public List<Bet> findAll() {
+	public Iterable<Bet> findAll() {
 		return betRepository.findAll();
 	}
 
@@ -36,11 +37,11 @@ public class BetService {
 			 throw new BadRequestException("Bet Option is not valid");
 			
 		}
-		return betRepository.saveAndFlush(bet);
+		return betRepository.save(bet);
 	}
 	
 	public Bet save(Bet bet) {
-		return betRepository.saveAndFlush(bet);
+		return betRepository.save(bet);
 	}
 
 	private boolean isValidStakeAmount(Bet bet) {
@@ -53,8 +54,12 @@ public class BetService {
 
 	public List<Bet> findBetsForTurn(Turn turn) {
 		// FIXME filter from database 
-		List<Bet> lista = betRepository.findAll();
-		return lista.stream().filter(x -> x.getTurnId().equals(turn.getTurnId()))
+		Iterable<Bet> lista = betRepository.findAll();
+		List<Bet> list = new ArrayList<>();
+		for (Bet bet : lista) {
+			list.add(bet);
+		}
+		return list.stream().filter(x -> x.getTurnId().equals(turn.getTurnId()))
 				.collect(Collectors.toList());
 	}
 

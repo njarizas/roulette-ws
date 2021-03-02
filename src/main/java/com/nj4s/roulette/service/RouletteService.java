@@ -1,6 +1,5 @@
 package com.nj4s.roulette.service;
 
-import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -23,14 +22,15 @@ public class RouletteService {
 	RouletteRepository rouletteRepository;
 
 	public Roulette save(Roulette roulette) {
-		return rouletteRepository.saveAndFlush(roulette);
+		rouletteRepository.save(roulette);
+		return roulette;
 	}
 
-	public List<Roulette> findAll() {
+	public Iterable<Roulette> findAll() {
 		return rouletteRepository.findAll();
 	}
 
-	public Roulette findById(Integer rouletteId) {
+	public Roulette findById(Long rouletteId) {
 		return rouletteRepository.findById(rouletteId).orElse(null);
 	}
 

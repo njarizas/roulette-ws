@@ -1,5 +1,6 @@
 package com.nj4s.roulette.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,17 @@ public class TurnService {
 	TurnRepository turnRepository;
 
 	public Turn save(Turn turn) {
-		return turnRepository.saveAndFlush(turn);
+		return turnRepository.save(turn);
 	}
 
-	public Turn findActiveTurn(Integer rouletteId) {
+	public Turn findActiveTurn(Long rouletteId) {
 		// FIXME: filtrar desde la base de datos
-		List<Turn> turnList = turnRepository.findAll();
-		return turnList.stream().filter(x -> x.getRouletteId().equals(rouletteId) && x.getIsSpinning()).findAny()
+		Iterable<Turn> turnList = turnRepository.findAll();
+		List<Turn> turnLista = new ArrayList<>();
+		for(Turn turn : turnList) {
+			turnLista.add(turn);
+		}
+		return turnLista.stream().filter(x -> x.getRouletteId().equals(rouletteId) && x.getIsSpinning()).findAny()
 				.orElse(null);
 	}
 	

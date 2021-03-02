@@ -21,7 +21,7 @@ public class BetAPI {
 	FacadeService facadeService;
 
 	@GetMapping(value = "/bet")
-	public List<Bet> findAll() {
+	public Iterable<Bet> findAll() {
 		return facadeService.findAllBets();
 	}
 
@@ -31,7 +31,7 @@ public class BetAPI {
 	}
 
 	@PatchMapping(value = "/bet/close")
-	public List<Bet> close(@RequestBody Integer rouletteId) {
+	public List<Bet> close(@RequestBody Long rouletteId) {
 		Roulette roulette = facadeService.findRouletteById(rouletteId);
 		return facadeService.closeBets(roulette);
 	}

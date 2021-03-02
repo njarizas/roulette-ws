@@ -2,36 +2,33 @@ package com.nj4s.roulette.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity (name = "turns")
+@RedisHash("Turn")
 public class Turn implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
-	private Integer turnId;
-	private Integer rouletteId;
+	private Long turnId;
+	private Long rouletteId;
 	private Boolean isSpinning;
 	private Integer turnResult;
 
-	public Integer getTurnId() {
+	public Long getTurnId() {
 		return turnId;
 	}
 
-	public void setTurnId(Integer turnId) {
+	public void setTurnId(Long turnId) {
 		this.turnId = turnId;
 	}
 
-	public Integer getRouletteId() {
+	public Long getRouletteId() {
 		return rouletteId;
 	}
 
-	public void setRouletteId(Integer rouletteId) {
+	public void setRouletteId(Long rouletteId) {
 		this.rouletteId = rouletteId;
 	}
 

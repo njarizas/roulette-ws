@@ -1,7 +1,5 @@
 package com.nj4s.roulette.api;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nj4s.roulette.dto.Roulette;
 import com.nj4s.roulette.service.FacadeService;
-import com.sun.istack.NotNull;
 
 @RestController
 public class RouletteAPI {
@@ -23,7 +20,7 @@ public class RouletteAPI {
 	FacadeService facadeService;
 
 	@GetMapping(value = "/roulette")
-	public List<Roulette> findAll() {
+	public Iterable<Roulette> findAll() {
 		return facadeService.findAllRoulettes();
 	}
 
@@ -33,19 +30,19 @@ public class RouletteAPI {
 	}
 
 	@GetMapping(value = "/roulette/{rouletteId}")
-	public Roulette findById(@PathVariable @NotNull Integer rouletteId) {
+	public Roulette findById(@PathVariable Long rouletteId) {
 		return facadeService.findRouletteById(rouletteId);
 	}
 
 	// TODO Investigate the correct way to use PATCH according to RFC6902
 	@PatchMapping(value = "/roulette/open", produces = { "application/json" })
 	@ResponseStatus(HttpStatus.OK)
-	public String open(@RequestBody Integer rouletteId) {
+	public String open(@RequestBody Long rouletteId) {
 		return facadeService.openRoulette(rouletteId);
 	}
 
 	@PatchMapping(value = "/roulette/close")
-	public String close(@RequestBody Integer rouletteId) {
+	public String close(@RequestBody Long rouletteId) {
 		return facadeService.closeRoulette(rouletteId);
 	}
 

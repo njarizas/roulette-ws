@@ -2,19 +2,16 @@ package com.nj4s.roulette.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity(name = "roulettes")
+@RedisHash("Roulette")
 public class Roulette implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer rouletteId;
+	Long rouletteId;
 	RouletteStateEnum state;
 
 	public Roulette() {
@@ -22,17 +19,17 @@ public class Roulette implements Serializable {
 		this.state = RouletteStateEnum.CLOSED;
 	}
 
-	public Roulette(Integer rouletteId, RouletteStateEnum state) {
+	public Roulette(Long rouletteId, RouletteStateEnum state) {
 		super();
 		this.rouletteId = rouletteId;
 		this.state = state;
 	}
 
-	public Integer getRouletteId() {
+	public Long getRouletteId() {
 		return rouletteId;
 	}
 
-	public void setRouletteId(Integer rouletteId) {
+	public void setRouletteId(Long rouletteId) {
 		this.rouletteId = rouletteId;
 	}
 
